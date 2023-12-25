@@ -1,0 +1,11 @@
+=> passport,passport-local and passport-local-mongoose - these packages are used for authentication purpose .
+
+=> data Association - In this project we are creating users and posts routes ,so we r creting two models - one for users and other for posts ,
+In users we store - posts id and in posts model we are sotring users id ,
+So that thing is nothing but data Association.
+
+
+=> if user Enters wrong password or Credentials then we show some waring and for that we use connect-flash package.
+
+
+=> 

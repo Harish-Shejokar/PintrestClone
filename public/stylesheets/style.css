@@ -147,3 +147,9 @@ hr {
   background-color: rgb(241, 236, 236);
   border-radius: 20px;
 }
+
+.error{
+  color: red;
+  margin: 5px 0;
+  text-transform: capitalize;
+}

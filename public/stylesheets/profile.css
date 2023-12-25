@@ -81,3 +81,23 @@ body{
        color:#fff;
         height:40px;
 }
+
+
+
+.slide-wrapper {
+  display: inline-block;
+  margin: 1em;
+}
+
+.slide-wrapper img {
+  display: block;
+  width: 300px;
+}
+
+.slide-wrapper .content {
+  background: rgb(202,202,202);
+  padding: 2rem;
+  display: inline-block;
+  min-width: 100%;
+  width: 0;
+}

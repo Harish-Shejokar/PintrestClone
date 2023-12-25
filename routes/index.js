@@ -4,21 +4,10 @@ const userModel = require("./users");
 const postModel = require("./posts");
 const localStrategy = require("passport-local");
 const passport = require("passport");
+const upload = require("./multer");
 
 //user authenticate
 passport.use(new localStrategy(userModel.authenticate()));
-
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index");
-});
-router.get("/login", function (req, res, next) {
-  res.render("loginPage");
-});
-
-router.get("/profile",isLoggedIn , function (req, res, next) {
-  res.render("profile");
-});
 
 router.post("/register", (req, res) => {
   const { email, username, fullname } = req.body;
@@ -35,12 +24,58 @@ router.post("/register", (req, res) => {
   });
 });
 
-router.post("/login",passport.authenticate("local", {
+router.post("/login",
+  passport.authenticate("local", {
     successRedirect: "/profile",
-    failureRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
   }),
-  function () {}
+  function (req, res) {}
 );
+
+router.post("/upload", isLoggedIn, upload.single("file"), async (req, res) => {
+  if (!req.file) {
+    return res.status(404).send("no file were given");
+  }
+
+  const user = await userModel.findOne({
+    username:req.session.passport.user
+  })
+
+ const post = await postModel.create({
+   image: req.file.filename, // this is for getting uploaded fileName
+   imageText: req.body.filecaption,
+   user: user._id,
+ });
+  
+  user.posts.push(post._id);
+  await user.save();
+
+
+  res.redirect("/profile");
+});
+
+
+
+
+/* GET home page. */
+router.get("/", function (req, res, next) {
+  res.render("index");
+});
+router.get("/login", function (req, res, next) {
+  // console.log(">>>>>>>>", req.flash("error"));
+
+  res.render("loginPage", { error: req.flash("error") });
+});
+
+router.get("/profile", isLoggedIn, async function (req, res, next) {
+  const user = await userModel.findOne({
+    username: req.session.passport.user,
+  }).populate("posts");
+  console.log(user);
+  res.render("profile", { user });
+});
+
 router.get("/logout", function (req, res, next) {
   req.logout(function (err) {
     if (err) {
@@ -50,17 +85,14 @@ router.get("/logout", function (req, res, next) {
   });
 });
 
-router.get("/feeds", (req, res) => {
-  res.render("feeds")
-})
+router.get("/feeds", isLoggedIn, (req, res) => {
+  res.render("feeds");
+});
 
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.redirect("/");
 }
-
-
-
 
 // router.get('/createUser', async function(req, res, next) {
 
