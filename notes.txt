@@ -8,4 +8,6 @@ So that thing is nothing but data Association.
 => if user Enters wrong password or Credentials then we show some waring and for that we use connect-flash package.
 
 
-=> 
+=> uuid4 package is for unique name genaration of file and multer package for uploading images .Multer syntax or code is alredy available so copy paste it , no need to cram.
+
+=>
